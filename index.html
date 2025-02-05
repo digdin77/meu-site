@@ -1,177 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bot Financeiro Simulação</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 
-        .container {
-            width: 100%;
-            max-width: 400px;
-            background-color: #1e1e1e;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
+export default function FinanceBot() {
+  const [messages, setMessages] = useState([
+    { type: "bot", text: "Bem-vindo ao Bot Financeiro! 💰" },
+    { type: "bot", text: "Digite um gasto como: \"ifood 44\" para testar!" },
+  ]);
+  const [input, setInput] = useState("");
 
-        .header {
-            background-color: #075E54;
-            padding: 15px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            color: #fff;
-        }
+  const handleSend = () => {
+    if (!input.trim()) return;
 
-        .chat {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
+    const userMessage = { type: "user", text: input };
+    setMessages((prev) => [...prev, userMessage]);
 
-        .chat-message {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: flex-end;
-        }
+    setTimeout(() => {
+      const botResponse = { type: "bot", text: `Gasto adicionado: ${input}` };
+      setMessages((prev) => [...prev, botResponse]);
+    }, 1000);
 
-        .bot-message {
-            background-color: #2e7d32;
-            color: #fff;
-            padding: 10px;
-            border-radius: 10px;
-            max-width: 70%;
-            font-size: 14px;
-        }
+    setInput("");
+  };
 
-        .user-message {
-            background-color: #128C7E;
-            color: #fff;
-            padding: 10px;
-            border-radius: 10px;
-            max-width: 70%;
-            margin-left: auto;
-            font-size: 14px;
-        }
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSend();
+    }
+  };
 
-        .typing {
-            color: #aaa;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
-        .input-box {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            background-color: #1e1e1e;
-            border-top: 1px solid #333;
-        }
-
-        .input-box input {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 20px;
-            background-color: #333;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .input-box button {
-            margin-left: 10px;
-            padding: 10px 15px;
-            background-color: #128C7E;
-            border: none;
-            border-radius: 50%;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .input-box button:hover {
-            background-color: #0d6b56;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">Bot Financeiro</div>
-        <div class="chat" id="chat">
-            <div class="chat-message">
-                <div class="bot-message">Bem-vindo ao Bot Financeiro! 💰</div>
-            </div>
-            <div class="chat-message">
-                <div class="bot-message">Digite um gasto como: "ifood 44" para testar!</div>
-            </div>
+  return (
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <header className="bg-green-700 text-white text-center p-4 rounded-t-lg font-bold">
+          Bot Financeiro
+        </header>
+        <div className="bg-neutral-800 p-4 h-96 overflow-y-auto flex flex-col gap-2 rounded-b-lg">
+          {messages.map((message, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className={`p-2 rounded-lg max-w-xs ${
+                message.type === "bot"
+                  ? "bg-green-600 self-start"
+                  : "bg-green-800 self-end"
+              }`}
+            >
+              {message.text}
+            </motion.div>
+          ))}
         </div>
-        <div class="input-box">
-            <input type="text" id="userInput" placeholder="Digite sua mensagem...">
-            <button onclick="sendMessage()">&gt;</button>
+        <div className="flex items-center gap-2 mt-4">
+          <input
+            type="text"
+            placeholder="Digite sua mensagem..."
+            className="flex-1 p-2 rounded-lg border border-neutral-700 bg-neutral-900 text-white focus:outline-none"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
+          <button
+            onClick={handleSend}
+            className="bg-green-700 hover:bg-green-600 p-2 rounded-lg text-white font-bold"
+          >
+            ➤
+          </button>
         </div>
+      </div>
+      <div className="mt-8 text-center text-neutral-400">
+        <h2 className="text-xl font-bold text-white">Como Funciona?</h2>
+        <p className="mt-2">
+          Um assistente financeiro <span className="font-bold text-green-500">no seu WhatsApp</span>,
+          disponível 24h para ser seu controle financeiro interativo.
+        </p>
+        <p className="mt-4">Digite o que comprou e quanto custou, por exemplo:</p>
+        <p className="mt-2 font-mono bg-neutral-800 p-2 rounded-lg">"ifood 44"</p>
+        <p className="mt-4">
+          Registre um gasto (real ou fictício) para testar. Não se preocupe com vírgulas, nem com "R$",
+          escreva do seu jeito.
+        </p>
+      </div>
     </div>
-
-    <script>
-        function sendMessage() {
-            const chat = document.getElementById('chat');
-            const userInput = document.getElementById('userInput');
-            const message = userInput.value.trim();
-
-            if (message) {
-                // Add user message
-                const userMessageDiv = document.createElement('div');
-                userMessageDiv.className = 'chat-message';
-                userMessageDiv.innerHTML = `<div class='user-message'>${message}</div>`;
-                chat.appendChild(userMessageDiv);
-
-                // Clear input
-                userInput.value = '';
-
-                // Add typing indicator
-                const typingDiv = document.createElement('div');
-                typingDiv.className = 'typing';
-                typingDiv.innerText = 'Bot está digitando...';
-                chat.appendChild(typingDiv);
-
-                // Simulate bot response
-                setTimeout(() => {
-                    chat.removeChild(typingDiv);
-
-                    const botMessageDiv = document.createElement('div');
-                    botMessageDiv.className = 'chat-message';
-                    botMessageDiv.innerHTML = `<div class='bot-message'>Gasto adicionado: ${message}</div>`;
-                    chat.appendChild(botMessageDiv);
-
-                    // Scroll to bottom
-                    chat.scrollTop = chat.scrollHeight;
-                }, 1500);
-            }
-        }
-
-        // Send message on Enter key press
-        document.getElementById('userInput').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        });
-    </script>
-</body>
-</html>
+  );
+}
