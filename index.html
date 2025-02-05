@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 export default function FinanceBot() {
   const [messages, setMessages] = useState([
     { type: "bot", text: "Bem-vindo ao Bot Financeiro! 💰" },
-    { type: "bot", text: 'Digite um gasto como: "ifood 44" para testar!' },
+    { type: "bot", text: "Digite um gasto como: 'ifood 44' para testar!" },
   ]);
   const [input, setInput] = useState("");
 
@@ -12,11 +12,11 @@ export default function FinanceBot() {
     if (!input.trim()) return;
     const userMessage = { type: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
+    setInput("");
     setTimeout(() => {
       const botResponse = { type: "bot", text: `Gasto adicionado: ${input}` };
       setMessages((prev) => [...prev, botResponse]);
     }, 1000);
-    setInput("");
   };
 
   const handleKeyPress = (e) => {
@@ -26,54 +26,44 @@ export default function FinanceBot() {
   };
 
   return (
-    <div style={{ backgroundColor: "#121212", color: "white", minHeight: "100vh", padding: "20px" }}>
-      <div style={{ maxWidth: "400px", margin: "0 auto", backgroundColor: "#2C2C2C", padding: "10px", borderRadius: "8px" }}>
-        <div style={{ marginBottom: "10px", fontSize: "18px", fontWeight: "bold" }}>Bot Financeiro</div>
-        <div style={{ maxHeight: "300px", overflowY: "auto", marginBottom: "10px" }}>
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <header className="bg-green-700 text-white text-center p-4 rounded-t-lg font-bold">
+          Bot Financeiro
+        </header>
+        <div className="bg-neutral-800 p-4 h-96 overflow-y-auto flex flex-col gap-2 rounded-b-lg">
           {messages.map((message, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              style={{
-                backgroundColor: message.type === "bot" ? "#444" : "#1E90FF",
-                color: message.type === "bot" ? "white" : "black",
-                padding: "10px",
-                margin: "5px 0",
-                borderRadius: "8px",
-                alignSelf: message.type === "bot" ? "flex-start" : "flex-end",
-              }}
             >
-              {message.text}
+              <div
+                className={`${
+                  message.type === "bot"
+                    ? "bg-green-500 text-white"
+                    : "bg-gray-700 text-white"
+                } p-3 rounded-lg max-w-xs ${
+                  message.type === "bot" ? "self-start" : "self-end"
+                }`}
+              >
+                {message.text}
+              </div>
             </motion.div>
           ))}
         </div>
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div className="flex items-center mt-4">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Digite sua mensagem..."
-            style={{
-              flex: 1,
-              padding: "10px",
-              borderRadius: "8px",
-              border: "1px solid #444",
-              backgroundColor: "#222",
-              color: "white",
-            }}
+            className="flex-grow p-3 bg-gray-900 text-white rounded-l-lg"
           />
           <button
             onClick={handleSend}
-            style={{
-              backgroundColor: "#1E90FF",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              padding: "10px",
-              cursor: "pointer",
-            }}
+            className="bg-green-500 p-3 rounded-r-lg text-white"
           >
             Enviar
           </button>
